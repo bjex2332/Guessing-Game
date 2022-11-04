@@ -1,0 +1,2 @@
+This programs creats a quiz for the user regarding JavaScript.  It creates the questions and answers in the JavaScript and randomly selects the next question.  After the quiz the user can input their name if they get a high score.  Then can then play again or go home where they can view the high scores
+Created the quiz using multiple html's, css', and javaScript.  Accessing localStorage to store names and high scores.  Use Math to randomly generate the questions each time. 
