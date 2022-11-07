@@ -6,7 +6,7 @@ body {
     font-size: 50px;
 }
 
-.choice-container {
+.answer-container {
     display: flex;
     margin-bottom: 0.8rem;
     width: 100%;
@@ -17,18 +17,18 @@ body {
     
 }
 
-.choice-container:hover {
+.answer-container:hover {
     cursor: pointer;
     box-shadow: 0 0.4rem 1.4rem 0 blue;
     transform: scale(1.02);
     transform: transform 100ms;
 }
-.choice-prefix {
+.answer-prefix {
     padding: 2rem 2.5rem;
     color: white;
 }
 
-.choice-text {
+.answer-text {
     padding: 2rem;
     width: 100%;
 }
@@ -71,7 +71,7 @@ body {
 }
 
 @media screen and (max-width: 768px){
-    .choice-container {
+    .answer-container {
         min-width: 40rem;
     }
 }

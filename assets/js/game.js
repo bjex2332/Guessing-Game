@@ -1,109 +1,156 @@
-var question = document.querySelector('#question');
-var choices = Array.from(document.querySelectorAll('.choice-text'));
-var progressText = document.querySelector('#progressText');
-var scoreText = document.querySelector('#score');
-var progressBarFull = document.querySelector('#progressBarFull');
-
-let currentQuestion = {}
-let acceptingAnswers = true
+const question = document.querySelector('#question');
+const answers = Array.from(document.querySelectorAll('.answer-text'));
+const progressText = document.querySelector('#progressText');
+const scoreText = document.querySelector('#score');
+const progressBarFull = document.querySelector('#progressBarFull');
+const points = 100
+const end = 8
+let currentQ = {}
+let answer = true
 let score = 0
 let questionCounter = 0
-let availableQuestions = []
+let questionNum = []
 
 let questions = [
     {
         question: 'Commonly used data types DO NOT include:',
-        choice1: 'Strings',
-        choice2: 'Booleans',
-        choice3: 'Alerts',
-        choice4: 'Numbers',
-        answer: 3,
+        answer1: 'Booleans',
+        answer2: 'Alerts',
+        answer3: 'Numbers',
+        answer4: 'Strings',
+        answer: 2,
     },
     {
         question: 'Arrays in JavaScript can be used to store ______',
-        choice1: 'Numbers and Strings',
-        choice2: 'Other Arrays',
-        choice3: 'Booleans',
-        choice4: 'All of the Above',
+        answer1: 'Other Arrays',
+        answer2: 'Booleans',
+        answer3: 'Numbers and Strings',
+        answer4: 'All of the Above',
         answer: 4,
     },
     {
         question: 'A very useful tool used during development and debugging for printing content to the debugger is:?',
-        choice1: 'JavaScirpt',
-        choice2: 'Terminal/Bash',
-        choice3: 'For Loops',
-        choice4: 'console.log',
+        answer1: 'console.log',
+        answer2: 'JavaScript',
+        answer3: 'Terminal/Bash',
+        answer4: 'For Loops',
+        answer: 1,
+    },
+    {
+        question: 'What are people who write computer code called?',
+        answer1: 'Programmers',
+        answer2: 'Cryptographers',
+        answer3: 'Manufacturers',
+        answer4: 'Professors',
+        answer: 1,
+    },
+    {
+        question: 'Which of the following is NOT a programming language?',
+        answer1: 'C#',
+        answer2: 'Banana',
+        answer3: 'Python',
+        answer4: 'React',
+        answer: 2,
+    },
+    {
+        question: 'Where is the correct place to insert a JavaScript in HTML page?',
+        answer1: '<body>',
+        answer2: '<title>',
+        answer3: '<head> or <body>',
+        answer4: '<head>',
+        answer: 3,
+    },
+    {
+        question: 'How can you add a comment in Javascript code?',
+        answer1: '// example',
+        answer2: "'example",
+        answer3: '<!--example-->',
+        answer4: '#example',
+        answer: 1,
+    },
+    {
+        question: 'What language defines the behavior of a web page?',
+        answer1: 'CSS',
+        answer2: 'JavaScript',
+        answer3: 'HTML',
+        answer4: 'React',
+        answer: 2,
+    },
+    {
+        question: 'How does a WHILE loop start in Javascript?',
+        answer1: 'while (i <= 10, i++)',
+        answer2: 'while i = 1 to 10',
+        answer3: 'while = i++',
+        answer4: 'while (i <= 10)',
         answer: 4,
     },
     {
         question: 'The condition in an if/else statement is enclosed within ______',
-        choice1: 'Quotes',
-        choice2: 'Curly Brackets',
-        choice3: 'Parentheses',
-        choice4: 'Square Brackets',
+        answer1: 'Curly Brackets',
+        answer2: 'Square Brackets',
+        answer3: 'Parentheses',
+        answer: 'Quotes',
         answer: 3,
     }
 ]
 
-var SCORE_POINTS = 100
-var MAX_QUESTIONS = 4
+
 
 startGame = () => {
     questionCounter = 0
     score = 0
-    availableQuestions = [...questions]
+    questionNum = [...questions]
     getNewQuestion()
 }
 
 getNewQuestion = () => {
-    if(availableQuestions.length === 0 || questionCounter > MAX_QUESTIONS) {
+    if(questionNum.length === 0 || questionCounter >= end) {
         localStorage.setItem('mostRecentScore', score)
 
         return window.location.assign('./end.html')
     }
 
     questionCounter++
-    progressText.innerText = `Question ${questionCounter} of ${MAX_QUESTIONS}`
-    progressBarFull.style.width = `${(questionCounter/MAX_QUESTIONS) * 100}%`
+    progressText.innerText = `Question ${questionCounter} of ${end}`
+    progressBarFull.style.width = `${(questionCounter/end) * 100}%`
 
-    var questionsIndex = Math.floor(Math.random() * availableQuestions.length)
-    currentQuestion = availableQuestions[questionsIndex]
-    question.innerText = currentQuestion.question
+    const questionsIndex = Math.floor(Math.random() * questionNum.length)
+    currentQ = questionNum[questionsIndex]
+    question.innerText = currentQ.question
 
-    choices.forEach(choice => {
-        var number = choice.dataset['number']
-        choice.innerText = currentQuestion['choice' + number]
+    answers.forEach(answer => {
+        let number = answer.dataset['number']
+        answer.innerText = currentQ['answer' + number]
     })
-    availableQuestions.splice(questionsIndex, 1)
+    questionNum.splice(questionsIndex, 1)
 
-    acceptingAnswers = true
+    answer = true
 }
 
-choices.forEach(choice => {
-    choice.addEventListener('click', e=> {
-        if(!acceptingAnswers) return
+answers.forEach(answer => {
+    answer.addEventListener('click', e=> {
+        
+        answer = false
+        let choice = e.target
+        let userAnswer = choice.dataset ['number']
 
-        acceptingAnswers = false
-        var selectedChoice = e.target
-        var selectedAnswer = selectedChoice.dataset ['number']
+        let correct = userAnswer == currentQ.answer ? 'correct' : 'incorrect'
 
-        let classToApply = selectedAnswer == currentQuestion.answer ? 'correct' : 'incorrect'
-
-        if (classToApply === 'correct') {
-            incrementScore(SCORE_POINTS)
+        if (correct === 'correct') {
+            upScore(points)
         }
 
-        selectedChoice.parentElement.classList.add(classToApply)
+        choice.parentElement.classList.add(correct)
 
         setTimeout(() => {
-            selectedChoice.parentElement.classList.remove(classToApply)
+            choice.parentElement.classList.remove(correct)
             getNewQuestion()
 
         }, 1000)
     })
 })
 
-incrementScore = num => {
+upScore = num => {
     score +=num
     scoreText.innerText = score
 }
